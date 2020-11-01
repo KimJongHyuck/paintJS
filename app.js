@@ -4,12 +4,18 @@ const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 
+const INITIAL_COLOR = "#2c2c2c";
+
 //css로 만든 크기말고 선을 그릴 수 있는 높이와 너비를 지정해 줘야함.
 canvas.width = 700;
 canvas.height = 600;
 
-ctx.strokeStyle = "#2c2c2c"; // 기본 색상을 검정색으로 
+ctx.strokeStyle = INITIAL_COLOR // 기본 색상을 검정색으로 
+ctx.fillStyle = INITIAL_COLOR; // 전체 칠하기 색상 디폴트값 
 ctx.lineWidth = 2.5; // 선 굵기 디폴트값 지정
+
+// ctx.fillStyle = "green";
+// ctx.fillRect(50, 50, 50, 50);
 
 let painting = false;
 let filling = false;
@@ -41,7 +47,8 @@ function handleColorClick(event) {
     // console.log(event.target.style);
     const color = event.target.style.backgroundColor;
     // console.log(color);
-    ctx.strokeStyle = color;
+    ctx.strokeStyle = color; // 선을 긋는 스타일 색상
+    ctx.fillStyle = color;  // 전체 칠하기 스타일 색상
 }
 
 function handleRangeChange(event) {
@@ -49,7 +56,7 @@ function handleRangeChange(event) {
     const size = event.target.value;
     ctx.lineWidth = size;
 }
-
+//fill 버튼을 클릭하면 paint로 내용을 바꿔주는 메소드.
 function handleModeClick() {
     if(filling === true) {
         filling = false;
@@ -57,6 +64,13 @@ function handleModeClick() {
     } else {
         filling = true;
         mode.innerText = "Paint"
+        
+    }
+}
+
+function handleCanvasClick() {
+    if(filling){
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 }
 
@@ -65,6 +79,7 @@ if(canvas) {
     canvas.addEventListener("mousedown", startPainting);//클릭하고 있는 도중 발생하는 이벤트 
     canvas.addEventListener("mouseup", stopPainting);// 마우스를 누르고 뗀 상태
     canvas.addEventListener("mouseleave",stopPainting); // 캔버스안에서 마우스가 벗어나면 실행 
+    canvas.addEventListener("click", handleCanvasClick);
 }
 
 // console.log(Array.from(colors));
