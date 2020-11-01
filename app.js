@@ -3,13 +3,15 @@ const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave")
 
 const INITIAL_COLOR = "#2c2c2c";
 
 //css로 만든 크기말고 선을 그릴 수 있는 높이와 너비를 지정해 줘야함.
 canvas.width = 700;
 canvas.height = 600;
-
+ctx.fillStyle = "white"; // 기본바탕 흰색(CSS말고 canvas pixel단위로 ) 
+ctx.fillRect(0, 0, canvas.width, canvas.height); //사각형 그려줌 
 ctx.strokeStyle = INITIAL_COLOR // 기본 색상을 검정색으로 
 ctx.fillStyle = INITIAL_COLOR; // 전체 칠하기 색상 디폴트값 
 ctx.lineWidth = 2.5; // 선 굵기 디폴트값 지정
@@ -74,12 +76,30 @@ function handleCanvasClick() {
     }
 }
 
+function handleCM(event) {
+    // console.log(event);
+    event.preventDefault();
+}
+
+function handleSaveClick() {
+    const image = canvas.toDataURL();
+    // console.log(image);
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "PaintJS";
+    link.click();
+    // console.log(link);
+
+}
+
 if(canvas) {
     canvas.addEventListener("mousemove", onMouseMove); // 마우스가 움직일 때 
     canvas.addEventListener("mousedown", startPainting);//클릭하고 있는 도중 발생하는 이벤트 
     canvas.addEventListener("mouseup", stopPainting);// 마우스를 누르고 뗀 상태
     canvas.addEventListener("mouseleave",stopPainting); // 캔버스안에서 마우스가 벗어나면 실행 
-    canvas.addEventListener("click", handleCanvasClick);
+    canvas.addEventListener("click", handleCanvasClick); // 전체 칠하기 클릭 이벤트
+    canvas.addEventListener("contextmenu", handleCM); // 마우스 우클릭시 나오는 메뉴창 이벤트 
+
 }
 
 // console.log(Array.from(colors));
@@ -96,4 +116,8 @@ if(range) {
 
 if(mode) {
     mode.addEventListener("click", handleModeClick);
+}
+
+if(saveBtn) {
+    saveBtn.addEventListener("click", handleSaveClick);
 }
